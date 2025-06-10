@@ -31,6 +31,7 @@ Future<void> _checkAuth() async {
       return;
     }
 
+
     final role = user.role.toLowerCase();
     print('User role (lowercase): $role');
 
