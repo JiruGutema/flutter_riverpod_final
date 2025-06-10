@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:volunteer_connect/application/providers/event_provider.dart';
-import 'package:volunteer_connect/domain/models/event_model.dart';
 import 'package:volunteer_connect/presentation/screens/event_detail_page.dart';
 
 final searchQueryProvider = StateProvider<String>((ref) => '');
