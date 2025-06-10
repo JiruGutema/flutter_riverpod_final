@@ -4,8 +4,9 @@ import 'package:volunteer_connect/application/providers/auth_provider.dart';
 import 'package:volunteer_connect/application/providers/org_event_provider.dart';
 import 'package:volunteer_connect/domain/models/org_event.dart';
 import 'package:volunteer_connect/presentation/screens/login_screen.dart';
+import 'package:volunteer_connect/presentation/screens/profile_screen.dart';
 import 'package:volunteer_connect/presentation/screens/org_event.dart';
-import 'package:volunteer_connect/presentation/screens/volunteer_home.dart';
+// import 'package:volunteer_connect/presentation/screens/volunteer_home.dart';
 
 class OrganizationHomePage extends ConsumerStatefulWidget {
   const OrganizationHomePage({super.key});
@@ -18,10 +19,10 @@ class OrganizationHomePage extends ConsumerStatefulWidget {
 class _OrganizationHomePageState extends ConsumerState<OrganizationHomePage> {
   int _currentIndex = 0;
 
-  final List<Widget> _pages = const [
+  final List<Widget> _pages =  [
     OrgStyledHomeScreen(), // Styled like volunteer's home
     OrgEventListScreen(), // List of org's posted events
-    ProfilePage(), // Organization's profile
+   ProfileScreen(), // Organization's profile
   ];
 
   @override
