@@ -20,11 +20,10 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
     _checkAuth();
   }
 
-  Future<void> _checkAuth() async {
-    final isLoggedIn = await ref.read(authProvider.notifier).tryAutoLogin();
-    final user = ref.read(authProvider).user;
+Future<void> _checkAuth() async {
+    final user = await ref.read(authProvider.notifier).tryAutoLogin();
 
-    if (!isLoggedIn || user == null) {
+    if (user == null || user.role == null) {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (_) => const LoginScreen()),
@@ -32,19 +31,29 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
       return;
     }
 
-    // Navigate based on role
-    if (user.role == 'Organization') { // check if the Organization role is in the same capitalization. it could be role=organization
+
+    final role = user.role.toLowerCase();
+    print('User role (lowercase): $role');
+
+    if (role == 'organization') {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (_) => const OrganizationHomePage()),
       );
-    } else {
+    } else if (role == 'volunteer') {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (_) => const VolunteerHomePage()),
       );
+    } else {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (_) => const LoginScreen()),
+      );
     }
   }
+
+
 
   @override
   Widget build(BuildContext context) {

@@ -38,6 +38,8 @@ dependencies:
   cupertino_icons: ^1.0.8
   shared_preferences: ^2.5.3
   flutter_secure_storage: ^9.2.4
+  json_annotation: ^4.9.0
+  build_runner: ^2.4.15
 
 
 dev_dependencies:
@@ -66,6 +68,11 @@ flutter:
   assets:
     - assets/image.png
     - assets/logo.png
+    - assets/img/event_five.jpg
+    - assets/img/event_six.jpg
+    - assets/img/event_four.jpg
+    - assets/img/event_three.jpg
+
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
