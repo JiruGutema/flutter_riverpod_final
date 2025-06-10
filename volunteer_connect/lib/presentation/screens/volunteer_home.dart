@@ -24,7 +24,6 @@ class _VolunteerHomePageState extends ConsumerState<VolunteerHomePage> {
     ExploreScreen(),
     MyApplicationsScreen(),
     ProfilePage(),
-    OrgEventListScreen()
   ];
 
   @override
@@ -41,7 +40,6 @@ class _VolunteerHomePageState extends ConsumerState<VolunteerHomePage> {
           BottomNavigationBarItem(icon: Icon(Icons.explore), label: 'Explore'),
           BottomNavigationBarItem(icon: Icon(Icons.assignment), label: 'Application'),
           BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
-           BottomNavigationBarItem(icon: Icon(Icons.list), label: 'Org Events'),
         ],
       ),
     );
