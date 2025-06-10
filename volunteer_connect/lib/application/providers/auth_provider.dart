@@ -42,16 +42,19 @@ class AuthNotifier extends StateNotifier<AuthState> {
     state = AuthState(); // reset state
   }
 
-  Future<bool> tryAutoLogin() async {
+Future<UserModel?> tryAutoLogin() async {
     final token = await SecureStorage.getToken();
     final userJson = await SecureStorage.getUser();
 
     if (token != null && userJson != null) {
       final userMap = jsonDecode(userJson);
       final user = UserModel.fromJson(userMap);
+print('Loaded user role from storage: ${user.role}');
       state = state.copyWith(token: token, user: user, isAuthenticated: true);
-      return true;
+      return user;
     }
-    return false;
+
+    return null;
   }
+
 }
