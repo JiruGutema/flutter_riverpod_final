@@ -15,7 +15,7 @@ class ProfileScreen extends ConsumerWidget {
       return const Scaffold(body: Center(child: Text('Please log in')));
     }
     final user = auth.user!;
-    return user.role == 'Organization'
+    return user.role.toLowerCase() == 'organization'
         ? OrganizationProfileScreen(userId: user.id)
         : VolunteerProfileScreen(userId: user.id);
   }
