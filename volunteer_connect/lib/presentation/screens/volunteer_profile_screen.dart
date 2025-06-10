@@ -1,9 +1,9 @@
-
-/// lib/presentation/screens/volunteer_profile_screen.dart
+// lib/presentation/screens/volunteer_profile_screen.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../application/providers/profile_provider.dart';
 import '../widgets/skill_chip.dart';
+import '../widgets/delete_account_dialog.dart';
 import 'edit_profile_screen.dart';
 
 class VolunteerProfileScreen extends ConsumerWidget {
@@ -42,31 +42,49 @@ class VolunteerProfileScreen extends ConsumerWidget {
                   ],
                 ),
               ),
-              // Personal Info
+
+              // Personal Info with Delete Button
               Card(
                 margin: const EdgeInsets.fromLTRB(16, 16, 16, 0),
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                 elevation: 2,
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text('Personal Information', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                      const SizedBox(height: 8),
-                      _infoRow(Icons.email, p.email),
-                      const SizedBox(height: 8),
-                      _infoRow(Icons.location_on, p.city),
-                      const SizedBox(height: 8),
-                      _infoRow(Icons.phone, p.phone),
-                      const SizedBox(height: 12),
-                      const Text('Bio', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
-                      const SizedBox(height: 4),
-                      Text(p.bio),
-                    ],
-                  ),
+                child: Stack(
+                  children: [
+                    Positioned(
+                      top: 8,
+                      right: 8,
+                      child: IconButton(
+                        icon: const Icon(Icons.delete, color: Colors.red),
+                        onPressed: () => showDeleteAccountDialog(
+                          context: context,
+                          ref: ref,
+                          userId: p.id,
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text('Personal Information', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                          const SizedBox(height: 8),
+                          _infoRow(Icons.email, p.email),
+                          const SizedBox(height: 8),
+                          _infoRow(Icons.location_on, p.city),
+                          const SizedBox(height: 8),
+                          _infoRow(Icons.phone, p.phone),
+                          const SizedBox(height: 12),
+                          const Text('Bio', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
+                          const SizedBox(height: 4),
+                          Text(p.bio),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
               ),
+
               // Stats
               Card(
                 margin: const EdgeInsets.fromLTRB(16, 16, 16, 24),
