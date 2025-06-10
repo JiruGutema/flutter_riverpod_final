@@ -737,8 +737,9 @@ const approveApplication = async (req, res) => {
       'SELECT * FROM applications WHERE id = ? AND organization = ?',
       [applicationId, tokenData.name]
     );
-
+    
     if (check.length === 0) {
+      console.log("in approve")
       return res.status(404).json({ message: 'Application not found or not associated with your organization.' });
     }
 

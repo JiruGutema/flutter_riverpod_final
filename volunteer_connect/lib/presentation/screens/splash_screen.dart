@@ -33,7 +33,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
     }
 
     // Navigate based on role
-    if (user.role == 'Organization') {
+    if (user.role == 'Organization') { // check if the Organization role is in the same capitalization. it could be role=organization
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (_) => const OrganizationHomePage()),
