@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:volunteer_connect/application/providers/auth_provider.dart';
 import 'package:volunteer_connect/presentation/screens/login_screen.dart';
+import 'package:volunteer_connect/presentation/screens/profile_screen.dart';
 import '../../../application/providers/event_provider.dart';
 import '../../../domain/models/event_model.dart';
 
