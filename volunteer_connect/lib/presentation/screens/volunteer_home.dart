@@ -7,6 +7,7 @@ import 'package:volunteer_connect/domain/models/event_model.dart';
 import 'package:volunteer_connect/presentation/screens/explore_screen.dart';
 import 'package:volunteer_connect/presentation/screens/login_screen.dart';
 import 'package:volunteer_connect/presentation/screens/my_application_screen.dart';
+import 'package:volunteer_connect/presentation/screens/org_event.dart';
 
 class VolunteerHomePage extends ConsumerStatefulWidget {
   const VolunteerHomePage({super.key});
@@ -23,6 +24,7 @@ class _VolunteerHomePageState extends ConsumerState<VolunteerHomePage> {
     ExploreScreen(),
     MyApplicationsScreen(),
     ProfilePage(),
+    OrgEventListScreen()
   ];
 
   @override
@@ -39,6 +41,7 @@ class _VolunteerHomePageState extends ConsumerState<VolunteerHomePage> {
           BottomNavigationBarItem(icon: Icon(Icons.explore), label: 'Explore'),
           BottomNavigationBarItem(icon: Icon(Icons.assignment), label: 'Application'),
           BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
+           BottomNavigationBarItem(icon: Icon(Icons.list), label: 'Org Events'),
         ],
       ),
     );
