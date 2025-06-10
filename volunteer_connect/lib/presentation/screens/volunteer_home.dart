@@ -7,6 +7,8 @@ import 'package:volunteer_connect/domain/models/event_model.dart';
 import 'package:volunteer_connect/presentation/screens/explore_screen.dart';
 import 'package:volunteer_connect/presentation/screens/login_screen.dart';
 import 'package:volunteer_connect/presentation/screens/my_application_screen.dart';
+import 'package:volunteer_connect/presentation/screens/org_event.dart';
+import 'package:volunteer_connect/presentation/screens/profile_screen.dart';
 
 class VolunteerHomePage extends ConsumerStatefulWidget {
   const VolunteerHomePage({super.key});
@@ -22,7 +24,7 @@ class _VolunteerHomePageState extends ConsumerState<VolunteerHomePage> {
     HomeScreenStyledContent(), // Your new styled homepage
     ExploreScreen(),
     MyApplicationsScreen(),
-    ProfilePage(),
+    ProfileScreen(),
   ];
 
   @override
@@ -204,12 +206,3 @@ class _UpcomingEventCard extends StatelessWidget {
   }
 }
 
-/// Placeholder Profile Page
-class ProfilePage extends StatelessWidget {
-  const ProfilePage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Center(child: Text('Profile Page'));
-  }
-}
