@@ -779,7 +779,7 @@ const rejectApplication = async (req, res) => {
       ['Canceled', applicationId]
     );
 
-    res.status(200).json({ message: 'Application approved.' });
+    res.status(200).json({ message: 'Application rejected.' });
   } catch (error) {
     res.status(500).json({ message: 'Error approving application', error });
   }
