@@ -12,12 +12,6 @@ class EventDetailPage extends ConsumerWidget {
 
   Future<void> _applyToEvent(BuildContext context, WidgetRef ref) async {
     final token = ref.read(authProvider).token;
-    if (token == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('You must be logged in to apply.')),
-      );
-      return;
-    }
 
     try {
       await ApiClient.post(
