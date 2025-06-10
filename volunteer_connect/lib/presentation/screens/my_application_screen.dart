@@ -157,7 +157,6 @@ class _MyApplicationsScreenState extends ConsumerState<MyApplicationsScreen> {
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(const SnackBar(content: Text('Application canceled.')));
-        ref.refresh(applicationProvider); // Refresh list
       } catch (e) {
         ScaffoldMessenger.of(
           context,

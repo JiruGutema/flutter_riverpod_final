@@ -7,7 +7,6 @@ import 'package:volunteer_connect/domain/models/event_model.dart';
 import 'package:volunteer_connect/presentation/screens/explore_screen.dart';
 import 'package:volunteer_connect/presentation/screens/login_screen.dart';
 import 'package:volunteer_connect/presentation/screens/my_application_screen.dart';
-import 'package:volunteer_connect/presentation/screens/org_event.dart';
 import 'package:volunteer_connect/presentation/screens/profile_screen.dart';
 
 class VolunteerHomePage extends ConsumerStatefulWidget {

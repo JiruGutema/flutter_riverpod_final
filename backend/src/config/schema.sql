@@ -37,7 +37,7 @@ CREATE TABLE applications (
     status ENUM('Pending', 'Approved', 'Canceled') NOT NULL DEFAULT 'Pending',
     applied_date DATE NOT NULL,
     title VARCHAR(100) NOT NULL,
-    organization VARCHAR(100) NOT NULL,
+    Organization VARCHAR(100) NOT NULL,
     event_date DATE NOT NULL,
     event_time VARCHAR(20) NOT NULL,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,

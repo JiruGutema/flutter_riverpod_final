@@ -21,7 +21,7 @@ async function createEvent(req, res) {
     console.log(org_role)
 
     if (org_role !== 'Organization') {
-      return res.status(StatusCodes.FORBIDDEN).json({ message: "Only organizations can create events" });
+      return res.status(StatusCodes.FORBIDDEN).json({ message: "Only Organizations can create events" });
     }
 
 const { 
@@ -99,8 +99,8 @@ async function updateEvent(req, res) {
     const org_id = decoded.userid;
     const org_role = decoded.role;
 
-    if (org_role !== 'organization') {
-      return res.status(StatusCodes.FORBIDDEN).json({ message: "Only organizations can update events" });
+    if (org_role !== 'Organization') {
+      return res.status(StatusCodes.FORBIDDEN).json({ message: "Only Organizations can update events" });
     }
 
     const [event] = await dbConnection.query(
@@ -114,7 +114,7 @@ async function updateEvent(req, res) {
 
     if (event[0].org_id !== org_id) {
       return res.status(StatusCodes.FORBIDDEN).json({ 
-        message: "You can only update your organization's events" 
+        message: "You can only update your Organization's events" 
       });
     }
 
@@ -122,7 +122,7 @@ async function updateEvent(req, res) {
   title, subtitle, category, date, time, location,
   spotsLeft, description, requirements,
   additionalInfo, contactPhone, contactEmail, contactTelegram
-} = req.body;
+} = req.body;decoded.role !== "Organization"
 
 const image = req.file ? `/images/${req.file.filename}` : null;
 
@@ -196,8 +196,8 @@ async function deleteEvent(req, res) {
     const org_id = decoded.userid;
     const org_role = decoded.role;
 
-    if (org_role !== 'organization') {
-      return res.status(StatusCodes.FORBIDDEN).json({ message: "Only organizations can delete events" });
+    if (org_role !== 'Organization') {
+      return res.status(StatusCodes.FORBIDDEN).json({ message: "Only Organizations can delete events" });
     }
 
     const [event] = await dbConnection.query(
@@ -211,7 +211,7 @@ async function deleteEvent(req, res) {
 
     if (event[0].org_id !== org_id) {
       return res.status(StatusCodes.FORBIDDEN).json({ 
-        message: "You can only delete your organization's events" 
+        message: "You can only delete your Organization's events" 
       });
     }
 
@@ -355,14 +355,14 @@ async function getOrganizationEvents(req, res) {
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    
-    if (decoded.role !== 'organization') {
+
+    if (decoded.role !== 'Organization') {
       return res.status(StatusCodes.FORBIDDEN).json({
-        error: "Only organizations can access this endpoint"
+        error: "Only Organizations can access this endpoint"
       });
     }
 
-    const orgId = decoded.userid; // Get organization ID from token
+    const orgId = decoded.userid; // Get Organization ID from token
 
     const [events] = await dbConnection.query(`
       SELECT 
@@ -403,9 +403,9 @@ async function getOrganizationEvents(req, res) {
       });
     }
 
-    console.error("Error fetching organization events:", error);
+    console.error("Error fetching Organization events:", error);
     return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-      error: "Failed to fetch organization events"
+      error: "Failed to fetch Organization events"
     });
   }
 }
@@ -429,7 +429,7 @@ async function applyForEvent(req, res) {
         e.time,
         e.spotsLeft,
         e.contactEmail,
-        o.name AS organization_name
+        o.name AS Organization_name
        FROM events e
        JOIN users o ON e.org_id = o.id
        WHERE e.id = ?
@@ -495,7 +495,7 @@ async function applyForEvent(req, res) {
         status,
         applied_date,
         title,
-        organization,
+        Organization,
         event_date,
         event_time
       ) VALUES (?, ?, 'pending', NOW(), ?, ?, ?, ?)`,
@@ -503,7 +503,7 @@ async function applyForEvent(req, res) {
         userId,
         targetEventId,
         event[0].title,
-        event[0].organization_name,
+        event[0].Organization_name,
         event[0].date,
         event[0].time
       ]
@@ -687,8 +687,8 @@ const deleteApplication = async (req, res) => {
   const tokenData = getTokenData(req);
   console.log("Token data:", tokenData); // Debug
 
-  // Only allow users (not organizations)
-  if (tokenData?.role === "organization") {
+  // Only allow users (not Organizations)
+  if (tokenData?.role === "Organization") {
     return res.status(403).json({ message: 'Only users can delete applications.' });
   }
 
@@ -727,19 +727,20 @@ const approveApplication = async (req, res) => {
 
   const tokenData = getTokenData(req);
   if (!tokenData?.role == "volunteer") {
-    return res.status(403).json({ message: 'Only organizations can approve applications.' });
+    return res.status(403).json({ message: 'Only Organizations can approve applications.' });
   }
 
   const applicationId = req.params.id;
 
   try {
     const [check] = await dbConnection.execute(
-      'SELECT * FROM applications WHERE id = ? AND organization = ?',
+      'SELECT * FROM applications WHERE id = ? AND Organization = ?',
       [applicationId, tokenData.name]
     );
-
+    
     if (check.length === 0) {
-      return res.status(404).json({ message: 'Application not found or not associated with your organization.' });
+      console.log("in approve")
+      return res.status(404).json({ message: 'Application not found or not associated with your Organization.' });
     }
 
     await dbConnection.execute(
@@ -758,19 +759,19 @@ const rejectApplication = async (req, res) => {
   
   const tokenData = getTokenData(req);
   if (!tokenData?.role == "volunteer") {
-    return res.status(403).json({ message: 'Only organizations can approve applications.' });
+    return res.status(403).json({ message: 'Only Organizations can approve applications.' });
   }
 
   const applicationId = req.params.id;
 
   try {
     const [check] = await dbConnection.execute(
-      'SELECT * FROM applications WHERE id = ? AND organization = ?',
+      'SELECT * FROM applications WHERE id = ? AND Organization = ?',
       [applicationId, tokenData.name]
     );
 
     if (check.length === 0) {
-      return res.status(404).json({ message: 'Application not found or not associated with your organization.' });
+      return res.status(404).json({ message: 'Application not found or not associated with your Organization.' });
     }
 
     await dbConnection.execute(

@@ -1,6 +1,5 @@
 
 import 'package:dio/dio.dart';
-import 'dart:convert'; // only if you need jsonEncode elsewhere
 import '../storage/secure_storage.dart';
 
 class ApiClient {

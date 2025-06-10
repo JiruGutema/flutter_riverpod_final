@@ -23,13 +23,14 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
 Future<void> _checkAuth() async {
     final user = await ref.read(authProvider.notifier).tryAutoLogin();
 
-    if (user == null || user.role == null) {
+    if (user == null) {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (_) => const LoginScreen()),
       );
       return;
     }
+
 
     final role = user.role.toLowerCase();
     print('User role (lowercase): $role');
