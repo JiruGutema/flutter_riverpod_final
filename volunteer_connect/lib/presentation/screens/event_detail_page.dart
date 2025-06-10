@@ -1,10 +1,11 @@
-
 // event_detail_page.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:volunteer_connect/application/providers/auth_provider.dart';
 import 'package:volunteer_connect/domain/models/event_model.dart';
-import 'package:volunteer_connect/infrastructure/data_sources/api_client.dart';class EventDetailPage extends ConsumerWidget {
+import 'package:volunteer_connect/infrastructure/data_sources/api_client.dart';
+
+class EventDetailPage extends ConsumerWidget {
   final EventModel event;
 
   const EventDetailPage({super.key, required this.event});
@@ -32,9 +33,9 @@ import 'package:volunteer_connect/infrastructure/data_sources/api_client.dart';c
       }
     } catch (e) {
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to apply: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Failed to apply: $e')));
       }
     }
   }
@@ -55,7 +56,10 @@ import 'package:volunteer_connect/infrastructure/data_sources/api_client.dart';c
               fit: BoxFit.cover,
             ),
             const SizedBox(height: 12),
-            Text(event.title, style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
+            Text(
+              event.title,
+              style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+            ),
             const SizedBox(height: 8),
             Text(event.description),
             const SizedBox(height: 8),
@@ -66,13 +70,15 @@ import 'package:volunteer_connect/infrastructure/data_sources/api_client.dart';c
             const SizedBox(height: 20),
             Center(
               child: ElevatedButton(
-                          style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all(Colors.blue),
-                          ),
-
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all(Colors.blue),
+                ),
 
                 onPressed: () => _applyToEvent(context, ref),
-                child: const Text('Apply', style: TextStyle(fontSize: 18, color: Colors.white)),
+                child: const Text(
+                  'Apply',
+                  style: TextStyle(fontSize: 18, color: Colors.white),
+                ),
               ),
             ),
           ],

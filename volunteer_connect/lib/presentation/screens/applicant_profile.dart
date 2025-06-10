@@ -39,7 +39,7 @@ class _ApplicantProfileScreenState
       backgroundColor: const Color(0xFFF5F5F5),
       appBar: AppBar(
         // title: const Text('Applicant Profile'),
-          title: Text('Applicant Profile (${widget.userId})'),
+        title: Text('Applicant Profile'),
         backgroundColor: Colors.white,
         foregroundColor: Colors.black,
         elevation: 1,
@@ -129,7 +129,6 @@ class _ApplicantProfileScreenState
                                 ),
                               ],
                             ),
-
                           ],
                         ),
                       ),
