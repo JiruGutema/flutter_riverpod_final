@@ -30,7 +30,7 @@ CREATE TABLE user_interests (
 );
 
 -- Applications
-CREATE TABLE applications (
+CREATE TABLE applications (Contributions per week to main, excluding merge commits
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT,
     event_id INT,  -- Now matches events.id type
