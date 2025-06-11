@@ -12,6 +12,7 @@ class ApiClient {
     ),
   );
 
+
   static Future<void> _attachToken() async {
     final token = await SecureStorage.getToken();
     if (token != null) {
