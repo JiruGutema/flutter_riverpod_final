@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:volunteer_connect/application/providers/auth_provider.dart';
@@ -38,8 +37,8 @@ class _OrganizationHomePageState extends ConsumerState<OrganizationHomePage> {
           });
         },
       ), // Index 1: Create Post (with callback)
-      const OrgEventListScreen(),  // Index 2: My Events
-      const ProfileScreen(),       // Index 3: Profile
+      const OrgEventListScreen(), // Index 2: My Events
+      const ProfileScreen(), // Index 3: Profile
     ];
   }
 
@@ -95,7 +94,7 @@ class OrgStyledHomeScreen extends ConsumerWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          "Welcome back, Org!",
+                          "Welcome back, Organization!",
                           style: TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.bold,
