@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:volunteer_connect/application/providers/auth_provider.dart';
+import 'package:volunteer_connect/application/providers/org_event_provider.dart';
+import 'package:volunteer_connect/domain/models/org_event.dart';
 import 'package:volunteer_connect/presentation/screens/login_screen.dart';
-import '../../../application/providers/event_provider.dart';
-import '../../../domain/models/event_model.dart';
+import 'package:volunteer_connect/presentation/screens/post_screen.dart';
+import 'package:volunteer_connect/presentation/screens/profile_screen.dart';
+import 'package:volunteer_connect/presentation/screens/org_event.dart';
 
 class OrganizationHomePage extends ConsumerStatefulWidget {
   const OrganizationHomePage({super.key});
@@ -16,111 +19,213 @@ class OrganizationHomePage extends ConsumerStatefulWidget {
 class _OrganizationHomePageState extends ConsumerState<OrganizationHomePage> {
   int _currentIndex = 0;
 
-  final List<Widget> _pages = const [
-    _EventsList(),
-    Center(child: Text('Explore Page')),
-    Center(child: Text('My Application Page')),
-    Center(child: Text('Profile Page')),
-  ];
+  late List<Widget> _pages;
+
+  @override
+  void initState() {
+    super.initState();
+    _buildPages();
+  }
+
+  void _buildPages() {
+    _pages = [
+      const OrgStyledHomeScreen(), // Index 0: Home
+      CreatePostScreen(
+        onPostCreated: () {
+          setState(() {
+            _currentIndex = 2; // Switch to "My Events" tab after creating post
+          });
+        },
+      ), // Index 1: Create Post (with callback)
+      const OrgEventListScreen(), // Index 2: My Events
+      const ProfileScreen(), // Index 3: Profile
+    ];
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Organization Home'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.logout),
-            tooltip: 'Logout',
-            onPressed: () async {
-              await ref.read(authProvider.notifier).logout();
-              if (context.mounted) {
-                Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(builder: (_) => const LoginScreen()),
-                  (route) => false,
-                );
-              }
-            },
-          ),
-        ],
-      ),
       body: _pages[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
+        selectedItemColor: Colors.blue,
+        unselectedItemColor: Colors.grey,
         onTap: (index) => setState(() => _currentIndex = index),
         items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.event), label: 'Home'),
-          BottomNavigationBarItem(icon: Icon(Icons.event), label: 'Explore'),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.post_add),
-            label: 'My Applications',
-          ),
-          BottomNavigationBarItem(icon: Icon(Icons.settings), label: 'Profile'),
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+          BottomNavigationBarItem(icon: Icon(Icons.add_box), label: 'Create'),
+          BottomNavigationBarItem(icon: Icon(Icons.event), label: 'My Events'),
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
         ],
       ),
     );
   }
 }
 
-class _EventsList extends ConsumerWidget {
-  const _EventsList({super.key});
+class OrgStyledHomeScreen extends ConsumerWidget {
+  const OrgStyledHomeScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final eventsAsync = ref.watch(eventsProvider);
+    final eventsAsync = ref.watch(orgEventProvider);
 
-    return eventsAsync.when(
-      data: (events) {
-        if (events.isEmpty) {
-          return const Center(child: Text('No events available.'));
-        }
+    return SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        child: eventsAsync.when(
+          loading: () => const Center(child: CircularProgressIndicator()),
+          error: (err, _) => Center(child: Text('Error: $err')),
+          data: (events) {
+            if (events.isEmpty) {
+              return const Center(child: Text('No events available.'));
+            }
 
-        return ListView.builder(
-          itemCount: events.length,
-          itemBuilder: (context, index) {
-            final event = events[index];
-            return EventCard(event: event);
+            final ongoingEvent = events.first;
+            final upcomingEvents = events.skip(1).toList();
+
+            return ListView(
+              children: [
+                const SizedBox(height: 16),
+                // Header
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Welcome back, Organization!",
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        SizedBox(height: 4),
+                        Text("Here are your current activities."),
+                      ],
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.logout),
+                      onPressed: () async {
+                        await ref.read(authProvider.notifier).logout();
+                        if (context.mounted) {
+                          Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => const LoginScreen(),
+                            ),
+                            (route) => false,
+                          );
+                        }
+                      },
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 24),
+
+                const Text(
+                  "Ongoing",
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 12),
+                _OngoingEventCard(event: ongoingEvent),
+                const SizedBox(height: 24),
+
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: const [
+                    Text(
+                      "Upcoming Events",
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Text("View all", style: TextStyle(color: Colors.blue)),
+                  ],
+                ),
+                const SizedBox(height: 12),
+                ...upcomingEvents.map(
+                  (event) => _UpcomingEventCard(event: event),
+                ),
+              ],
+            );
           },
-        );
-      },
-      loading: () => const Center(child: CircularProgressIndicator()),
-      error: (err, _) => Center(child: Text('Error: $err')),
+        ),
+      ),
     );
   }
 }
 
-class EventCard extends StatelessWidget {
-  final EventModel event;
-  const EventCard({super.key, required this.event});
+class _OngoingEventCard extends StatelessWidget {
+  final OrgEvent event;
+  const _OngoingEventCard({required this.event});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 160,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(16),
+        image: DecorationImage(
+          image: AssetImage('assets/image.png'),
+          fit: BoxFit.cover,
+          colorFilter: ColorFilter.mode(
+            Colors.black.withOpacity(0.4),
+            BlendMode.darken,
+          ),
+        ),
+      ),
+      padding: const EdgeInsets.all(16),
+      alignment: Alignment.bottomLeft,
+      child: Text(
+        'Don’t miss your "${event.title}" event!',
+        style: const TextStyle(
+          color: Colors.white,
+          fontSize: 18,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+    );
+  }
+}
+
+class _UpcomingEventCard extends StatelessWidget {
+  final OrgEvent event;
+  const _UpcomingEventCard({required this.event});
 
   @override
   Widget build(BuildContext context) {
     return Card(
-      margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-      child: Padding(
-        padding: const EdgeInsets.all(12),
-        child: Column(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      margin: const EdgeInsets.symmetric(vertical: 8),
+      child: ListTile(
+        contentPadding: const EdgeInsets.all(12),
+        leading: ClipRRect(
+          borderRadius: BorderRadius.circular(8),
+          child: Image.asset(
+            'assets/image.png',
+            width: 60,
+            height: 60,
+            fit: BoxFit.cover,
+          ),
+        ),
+        title: Text(
+          event.title,
+          style: const TextStyle(fontWeight: FontWeight.bold),
+        ),
+        subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Image.asset(
-              'assets/image.png',
-              height: 150,
-              width: double.infinity,
-              fit: BoxFit.cover,
-            ),
-            const SizedBox(height: 8),
-            Text(
-              event.title,
-              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-            ),
-            Text(event.subtitle, style: const TextStyle(color: Colors.grey)),
+            Text(event.subtitle),
             const SizedBox(height: 4),
-            Text('${event.date} at ${event.time}'),
-            Text('Location: ${event.location}'),
-            Text('Spots left: ${event.spotsLeft}'),
-            const SizedBox(height: 4),
-            Text(event.description),
+            Row(
+              children: [
+                const Icon(Icons.calendar_today, size: 14),
+                const SizedBox(width: 4),
+                Text('${event.date}, ${event.time}'),
+              ],
+            ),
           ],
         ),
       ),

@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:volunteer_connect/application/providers/auth_provider.dart';
@@ -7,7 +6,7 @@ import 'package:volunteer_connect/domain/models/event_model.dart';
 import 'package:volunteer_connect/presentation/screens/explore_screen.dart';
 import 'package:volunteer_connect/presentation/screens/login_screen.dart';
 import 'package:volunteer_connect/presentation/screens/my_application_screen.dart';
-import 'package:volunteer_connect/presentation/screens/org_event.dart';
+import 'package:volunteer_connect/presentation/screens/profile_screen.dart';
 
 class VolunteerHomePage extends ConsumerStatefulWidget {
   const VolunteerHomePage({super.key});
@@ -23,8 +22,7 @@ class _VolunteerHomePageState extends ConsumerState<VolunteerHomePage> {
     HomeScreenStyledContent(), // Your new styled homepage
     ExploreScreen(),
     MyApplicationsScreen(),
-    ProfilePage(),
-    OrgEventListScreen()
+    ProfileScreen(),
   ];
 
   @override
@@ -39,9 +37,11 @@ class _VolunteerHomePageState extends ConsumerState<VolunteerHomePage> {
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
           BottomNavigationBarItem(icon: Icon(Icons.explore), label: 'Explore'),
-          BottomNavigationBarItem(icon: Icon(Icons.assignment), label: 'Application'),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.assignment),
+            label: 'Application',
+          ),
           BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
-           BottomNavigationBarItem(icon: Icon(Icons.list), label: 'Org Events'),
         ],
       ),
     );
@@ -81,8 +81,13 @@ class HomeScreenStyledContent extends ConsumerWidget {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: const [
-                        Text("Hello, John",
-                            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                        Text(
+                          "Hello, Volunteer!",
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
                         SizedBox(height: 4),
                         Text("Ready to make a difference today?"),
                       ],
@@ -94,7 +99,9 @@ class HomeScreenStyledContent extends ConsumerWidget {
                         if (context.mounted) {
                           Navigator.pushAndRemoveUntil(
                             context,
-                            MaterialPageRoute(builder: (_) => const LoginScreen()),
+                            MaterialPageRoute(
+                              builder: (_) => const LoginScreen(),
+                            ),
                             (route) => false,
                           );
                         }
@@ -106,7 +113,10 @@ class HomeScreenStyledContent extends ConsumerWidget {
                 const SizedBox(height: 24),
 
                 /// Ongoing Event Card
-                const Text("Ongoing", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                const Text(
+                  "Ongoing",
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
                 const SizedBox(height: 12),
                 _OngoingEventCard(event: ongoingEvent),
 
@@ -116,8 +126,13 @@ class HomeScreenStyledContent extends ConsumerWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: const [
-                    Text("Upcoming events",
-                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                    Text(
+                      "Upcoming events",
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                     Text("View all", style: TextStyle(color: Colors.blue)),
                   ],
                 ),
@@ -125,7 +140,9 @@ class HomeScreenStyledContent extends ConsumerWidget {
                 const SizedBox(height: 12),
 
                 /// Upcoming Events List
-                ...upcomingEvents.map((event) => _UpcomingEventCard(event: event)),
+                ...upcomingEvents.map(
+                  (event) => _UpcomingEventCard(event: event),
+                ),
               ],
             );
           },
@@ -147,9 +164,14 @@ class _OngoingEventCard extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(16),
         image: DecorationImage(
-          image: AssetImage('assets/image.png'), // Replace with NetworkImage(event.image) if needed
+          image: AssetImage(
+            'assets/image.png',
+          ), // Replace with NetworkImage(event.image) if needed
           fit: BoxFit.cover,
-          colorFilter: ColorFilter.mode(Colors.black.withOpacity(0.4), BlendMode.darken),
+          colorFilter: ColorFilter.mode(
+            Colors.black.withOpacity(0.4),
+            BlendMode.darken,
+          ),
         ),
       ),
       padding: const EdgeInsets.all(16),
@@ -187,7 +209,10 @@ class _UpcomingEventCard extends StatelessWidget {
             fit: BoxFit.cover,
           ),
         ),
-        title: Text(event.title, style: const TextStyle(fontWeight: FontWeight.bold)),
+        title: Text(
+          event.title,
+          style: const TextStyle(fontWeight: FontWeight.bold),
+        ),
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -204,15 +229,5 @@ class _UpcomingEventCard extends StatelessWidget {
         ),
       ),
     );
-  }
-}
-
-/// Placeholder Profile Page
-class ProfilePage extends StatelessWidget {
-  const ProfilePage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Center(child: Text('Profile Page'));
   }
 }

@@ -26,17 +26,16 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       final response = await ApiClient.post('/auth/login', {
         'email': _emailController.text.trim(),
         'password': _passwordController.text.trim(),
-      }, requiresAuth: false, headers: {});
+      }, requiresAuth: false, headers: {}, token: '');
 
       final token = response.data['token'] as String;
       final user = response.data['user'] as Map<String, dynamic>;
 
       await ref.read(authProvider.notifier).login(token, user);
 
-      final userRole = user['role'];
-      if (!mounted) return;
+      final userRole = user['role']?.toString().toLowerCase();
 
-      if (userRole == 'Organization') {
+      if (userRole == 'organization') {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (_) => const OrganizationHomePage()),
@@ -47,6 +46,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           MaterialPageRoute(builder: (_) => const VolunteerHomePage()),
         );
       }
+
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(

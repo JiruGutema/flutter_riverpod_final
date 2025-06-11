@@ -8,7 +8,8 @@ class MyApplicationsScreen extends ConsumerStatefulWidget {
   const MyApplicationsScreen({super.key});
 
   @override
-  ConsumerState<MyApplicationsScreen> createState() => _MyApplicationsScreenState();
+  ConsumerState<MyApplicationsScreen> createState() =>
+      _MyApplicationsScreenState();
 }
 
 class _MyApplicationsScreenState extends ConsumerState<MyApplicationsScreen> {
@@ -19,24 +20,40 @@ class _MyApplicationsScreenState extends ConsumerState<MyApplicationsScreen> {
     final appsAsync = ref.watch(applicationProvider);
 
     return Scaffold(
-      backgroundColor: Colors.grey[100],
+      backgroundColor: const Color(0xFFF8F9FB),
+
       body: SafeArea(
         child: Column(
           children: [
-            const Padding(
-              padding: EdgeInsets.all(16),
-              child: Text(
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+              width: double.infinity,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.1),
+                    blurRadius: 8,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
+              ),
+              child: const Text(
                 'My Application',
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
             ),
+
             _buildFilterChips(),
             Expanded(
               child: appsAsync.when(
                 data: (apps) {
-                  final filtered = _selectedFilter == 'All'
-                      ? apps
-                      : apps.where((a) => a.status == _selectedFilter).toList();
+                  final filtered =
+                      _selectedFilter == 'All'
+                          ? apps
+                          : apps
+                              .where((a) => a.status == _selectedFilter)
+                              .toList();
 
                   return ListView.builder(
                     itemCount: filtered.length,
@@ -60,24 +77,54 @@ class _MyApplicationsScreenState extends ConsumerState<MyApplicationsScreen> {
 
   Widget _buildFilterChips() {
     const filters = ['All', 'Pending', 'Approved', 'Other'];
+
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Row(
-        children: filters.map((f) {
-          final isSelected = _selectedFilter == f;
-          return Padding(
-            padding: const EdgeInsets.only(right: 8),
-            child: ChoiceChip(
-              label: Text(f),
-              selected: isSelected,
-              onSelected: (_) => setState(() => _selectedFilter = f),
-              selectedColor: Colors.blue,
-              labelStyle: TextStyle(
-                color: isSelected ? Colors.white : Colors.black,
-              ),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(24),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.05),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
             ),
-          );
-        }).toList(),
+          ],
+        ),
+        child: SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            children:
+                filters.map((f) {
+                  final isSelected = _selectedFilter == f;
+                  return Padding(
+                    padding: const EdgeInsets.only(right: 12),
+                    child: GestureDetector(
+                      onTap: () => setState(() => _selectedFilter = f),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 8,
+                        ),
+                        decoration: BoxDecoration(
+                          color: isSelected ? Colors.blue : Colors.transparent,
+                          borderRadius: BorderRadius.circular(16), // Optional
+                        ),
+                        child: Text(
+                          f,
+                          style: TextStyle(
+                            color: isSelected ? Colors.white : Colors.black,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
+                    ),
+                  );
+                }).toList(),
+          ),
+        ),
       ),
     );
   }
@@ -85,41 +132,45 @@ class _MyApplicationsScreenState extends ConsumerState<MyApplicationsScreen> {
   Future<void> _handleCancel(ApplicationModel app) async {
     final confirmed = await showDialog<bool>(
       context: context,
-      builder: (_) => AlertDialog(
-        title: const Text('Cancel Application'),
-        content: const Text('Are you sure you want to cancel this application?'),
-        actions: [
-          TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('No')),
-          TextButton(onPressed: () => Navigator.pop(context, true), child: const Text('Yes')),
-        ],
-      ),
+      builder:
+          (_) => AlertDialog(
+            title: const Text('Cancel Application'),
+            content: const Text(
+              'Are you sure you want to cancel this application?',
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context, false),
+                child: const Text('No'),
+              ),
+              TextButton(
+                onPressed: () => Navigator.pop(context, true),
+                child: const Text('Yes'),
+              ),
+            ],
+          ),
     );
 
     if (confirmed == true) {
       try {
         await ApiClient.delete('/applications/${app.id}');
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text('Application canceled.'),
-        ));
-        ref.refresh(applicationProvider); // Refresh list
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('Application canceled.')));
       } catch (e) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text('Failed to cancel: $e'),
-        ));
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Failed to cancel: $e')));
       }
     }
   }
 }
 
-
 class _ApplicationCard extends StatelessWidget {
   final ApplicationModel application;
   final void Function(ApplicationModel) onCancel;
 
-  const _ApplicationCard({
-    required this.application,
-    required this.onCancel,
-  });
+  const _ApplicationCard({required this.application, required this.onCancel});
 
   Color _statusColor(String status) {
     switch (status) {
@@ -150,24 +201,39 @@ class _ApplicationCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      margin: const EdgeInsets.all(12),
-      elevation: 3,
+      color: Colors.white,
+      elevation: 8,
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+      shadowColor: Colors.black.withOpacity(0.5),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: Padding(
-        padding: const EdgeInsets.all(12),
+        padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               children: [
-                Icon(_statusIcon(application.status), color: _statusColor(application.status)),
+                Icon(
+                  _statusIcon(application.status),
+                  color: _statusColor(application.status),
+                ),
                 const SizedBox(width: 4),
-                Text(application.status, style: TextStyle(color: _statusColor(application.status))),
+                Text(
+                  application.status,
+                  style: TextStyle(color: _statusColor(application.status)),
+                ),
                 const Spacer(),
-                Text('Applied on ${application.date}', style: const TextStyle(color: Colors.grey)),
+                Text(
+                  'Applied on ${application.date}',
+                  style: const TextStyle(color: Color.fromARGB(255, 0, 0, 0)),
+                ),
               ],
             ),
             const SizedBox(height: 8),
-            Text(application.title, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            Text(
+              application.title,
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
             if (application.title.isNotEmpty) Text(application.title),
             const SizedBox(height: 4),
             Row(
@@ -187,7 +253,10 @@ class _ApplicationCard extends StatelessWidget {
                 alignment: Alignment.centerRight,
                 child: TextButton.icon(
                   icon: const Icon(Icons.cancel, color: Colors.red),
-                  label: const Text('Cancel', style: TextStyle(color: Colors.red)),
+                  label: const Text(
+                    'Cancel',
+                    style: TextStyle(color: Colors.red),
+                  ),
                   onPressed: () => onCancel(application),
                 ),
               ),

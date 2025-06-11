@@ -1,6 +1,5 @@
 
 import 'package:dio/dio.dart';
-import 'dart:convert'; // only if you need jsonEncode elsewhere
 import '../storage/secure_storage.dart';
 
 class ApiClient {
@@ -12,6 +11,7 @@ class ApiClient {
       },
     ),
   );
+
 
   static Future<void> _attachToken() async {
     final token = await SecureStorage.getToken();
@@ -26,7 +26,7 @@ class ApiClient {
     String path,
     dynamic data, {
     bool requiresAuth = false,
-    Map<String, String>? headers,
+    Map<String, String>? headers,body, required String token,
   }) async {
     if (requiresAuth) await _attachToken();
     if (headers != null) {
