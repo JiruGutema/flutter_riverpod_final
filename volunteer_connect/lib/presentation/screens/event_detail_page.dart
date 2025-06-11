@@ -17,7 +17,7 @@ class EventDetailPage extends ConsumerWidget {
       await ApiClient.post(
         '/event/apply/${event.id}',
         {},
-        headers: {'Authorization': 'Bearer $token'},
+        headers: {'Authorization': 'Bearer $token'}, token: '',
       );
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(

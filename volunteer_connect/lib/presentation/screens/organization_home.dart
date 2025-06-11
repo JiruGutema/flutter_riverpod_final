@@ -1,12 +1,13 @@
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:volunteer_connect/application/providers/auth_provider.dart';
 import 'package:volunteer_connect/application/providers/org_event_provider.dart';
 import 'package:volunteer_connect/domain/models/org_event.dart';
 import 'package:volunteer_connect/presentation/screens/login_screen.dart';
+import 'package:volunteer_connect/presentation/screens/post_screen.dart';
 import 'package:volunteer_connect/presentation/screens/profile_screen.dart';
 import 'package:volunteer_connect/presentation/screens/org_event.dart';
-// import 'package:volunteer_connect/presentation/screens/volunteer_home.dart';
 
 class OrganizationHomePage extends ConsumerStatefulWidget {
   const OrganizationHomePage({super.key});
@@ -19,11 +20,28 @@ class OrganizationHomePage extends ConsumerStatefulWidget {
 class _OrganizationHomePageState extends ConsumerState<OrganizationHomePage> {
   int _currentIndex = 0;
 
-  final List<Widget> _pages =  [
-    OrgStyledHomeScreen(), // Styled like volunteer's home
-    OrgEventListScreen(), // List of org's posted events
-   ProfileScreen(), // Organization's profile
-  ];
+  late List<Widget> _pages;
+
+  @override
+  void initState() {
+    super.initState();
+    _buildPages();
+  }
+
+  void _buildPages() {
+    _pages = [
+      const OrgStyledHomeScreen(), // Index 0: Home
+      CreatePostScreen(
+        onPostCreated: () {
+          setState(() {
+            _currentIndex = 2; // Switch to "My Events" tab after creating post
+          });
+        },
+      ), // Index 1: Create Post (with callback)
+      const OrgEventListScreen(),  // Index 2: My Events
+      const ProfileScreen(),       // Index 3: Profile
+    ];
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,6 +54,7 @@ class _OrganizationHomePageState extends ConsumerState<OrganizationHomePage> {
         onTap: (index) => setState(() => _currentIndex = index),
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+          BottomNavigationBarItem(icon: Icon(Icons.add_box), label: 'Create'),
           BottomNavigationBarItem(icon: Icon(Icons.event), label: 'My Events'),
           BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
         ],
@@ -68,14 +87,13 @@ class OrgStyledHomeScreen extends ConsumerWidget {
             return ListView(
               children: [
                 const SizedBox(height: 16),
-
-                /// Header with Logout
+                // Header
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Column(
+                    const Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: const [
+                      children: [
                         Text(
                           "Welcome back, Org!",
                           style: TextStyle(
@@ -104,20 +122,16 @@ class OrgStyledHomeScreen extends ConsumerWidget {
                     ),
                   ],
                 ),
-
                 const SizedBox(height: 24),
 
-                /// Ongoing Event
                 const Text(
                   "Ongoing",
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 12),
                 _OngoingEventCard(event: ongoingEvent),
-
                 const SizedBox(height: 24),
 
-                /// Upcoming Events
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: const [
@@ -204,13 +218,13 @@ class _UpcomingEventCard extends StatelessWidget {
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(event.subtitle), 
+            Text(event.subtitle),
             const SizedBox(height: 4),
             Row(
               children: [
                 const Icon(Icons.calendar_today, size: 14),
                 const SizedBox(width: 4),
-                Text('${event.date}, ${event.time}'), 
+                Text('${event.date}, ${event.time}'),
               ],
             ),
           ],
