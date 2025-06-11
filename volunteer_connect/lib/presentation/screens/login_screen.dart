@@ -26,7 +26,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       final response = await ApiClient.post('/auth/login', {
         'email': _emailController.text.trim(),
         'password': _passwordController.text.trim(),
-      }, requiresAuth: false, headers: {});
+      }, requiresAuth: false, headers: {}, token: '');
 
       final token = response.data['token'] as String;
       final user = response.data['user'] as Map<String, dynamic>;

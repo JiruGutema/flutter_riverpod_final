@@ -25,7 +25,7 @@ class ApiClient {
     String path,
     dynamic data, {
     bool requiresAuth = false,
-    Map<String, String>? headers,
+    Map<String, String>? headers,body, required String token,
   }) async {
     if (requiresAuth) await _attachToken();
     if (headers != null) {
