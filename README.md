@@ -45,7 +45,6 @@ VolunteerConnect is a local volunteering hub that connects volunteers with organ
 - **JWT/OAuth** (Authentication)
 
 ### Frontend
-- **Jetpack Compose (Kotlin)** (First mobile version)
 - **Flutter (Dart)** (Recreated mobile version)
 
 
