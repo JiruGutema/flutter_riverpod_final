@@ -1,4 +1,3 @@
-/// lib/infrastructure/data_sources/profile_data_source.dart
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import '../../domain/models/profile_model.dart';
@@ -34,11 +33,14 @@ class ProfileDataSource {
     return Profile.fromJson(resp.data['user']);
   }
 
+  /// **FIXED**: call the backend’s `DELETE /user` endpoint (no `:id` in path)
   Future<void> deleteProfile(int userId) async {
     final token = await _getToken();
     await _dio.delete(
-      '/users/$userId',
-      options: Options(headers: { 'Authorization': 'Bearer $token' }),
+      '/user',
+      options: Options(headers: {
+        'Authorization': 'Bearer $token'
+      }),
     );
   }
 }
