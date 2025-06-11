@@ -1,0 +1,6 @@
+USER_NAME="root"
+DATABASE="volunteer_test"
+HOST="localhost"
+PASSWORD="1441"
+JWT_SECRET="l8rnq0w9t8nqw0etqwejitnqw0t8u4038tqn4t8q9w8tn8q3409t8nqc098t09nq83490t8nc09q48ct"
+CONNECTION_LIMIT="10"

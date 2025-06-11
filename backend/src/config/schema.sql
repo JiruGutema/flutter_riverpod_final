@@ -1,6 +1,7 @@
 -- Active: 1737887074325@@127.0.0.1@3306
 -- USER TABLE
-
+create database volunteer;
+USE volunteer;
 CREATE TABLE users (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
@@ -28,23 +29,6 @@ CREATE TABLE user_interests (
     interest VARCHAR(50),
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
-
--- Applications
-CREATE TABLE applications (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    user_id INT,
-    event_id INT,  -- Now matches events.id type
-    status ENUM('Pending', 'Approved', 'Canceled') NOT NULL DEFAULT 'Pending',
-    applied_date DATE NOT NULL,
-    title VARCHAR(100) NOT NULL,
-    Organization VARCHAR(100) NOT NULL,
-    event_date DATE NOT NULL,
-    event_time VARCHAR(20) NOT NULL,
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
-    FOREIGN KEY (event_id) REFERENCES events(id) ON DELETE CASCADE
-);
-
-
 -- Events
 CREATE TABLE events (
   id INT AUTO_INCREMENT PRIMARY KEY,
@@ -65,5 +49,22 @@ CREATE TABLE events (
   contactEmail TEXT,
   contactTelegram TEXT
 );
+
+
+-- Applications
+CREATE TABLE applications (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT,
+    event_id INT,  -- Now matches events.id type
+    status ENUM('Pending', 'Approved', 'Canceled') NOT NULL DEFAULT 'Pending',
+    applied_date DATE NOT NULL,
+    title VARCHAR(100) NOT NULL,
+    Organization VARCHAR(100) NOT NULL,
+    event_date DATE NOT NULL,
+    event_time VARCHAR(20) NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (event_id) REFERENCES events(id) ON DELETE CASCADE
+);
+
 
 
