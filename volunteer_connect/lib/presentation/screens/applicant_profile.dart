@@ -38,7 +38,6 @@ class _ApplicantProfileScreenState
     return Scaffold(
       backgroundColor: const Color(0xFFF5F5F5),
       appBar: AppBar(
-        // title: const Text('Applicant Profile'),
         title: Text('Applicant Profile'),
         backgroundColor: Colors.white,
         foregroundColor: Colors.black,
@@ -56,7 +55,6 @@ class _ApplicantProfileScreenState
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    // Profile Card
                     Card(
                       elevation: 8,
                       shape: RoundedRectangleBorder(
@@ -130,12 +128,15 @@ class _ApplicantProfileScreenState
                               ],
                             ),
                           ],
+                          
                         ),
+
                       ),
+
                     ),
+
                     const SizedBox(height: 32),
 
-                    // Personal Info Card
                     Card(
                       elevation: 8,
                       shape: RoundedRectangleBorder(

@@ -26,7 +26,7 @@ class _SignupScreenState extends State<SignupScreen> {
         'email': _emailController.text.trim(),
         'password': _passwordController.text.trim(),
         'role': _selectedRole,
-      }, requiresAuth: false, headers: {});
+      }, requiresAuth: false, headers: {}, token: '');
 
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
