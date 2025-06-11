@@ -702,7 +702,7 @@ const deleteApplication = async (req, res) => {
     console.log(`Trying to delete application ID ${applicationId} for user ID ${tokenData.userid}`);
 
     const [result] = await dbConnection.execute(
-      'DELETE FROM applications WHERE id = ? AND user_id = ?',
+      'DELETE FROM applications WHERE event_id = ? AND user_id = ?',
       [applicationId, tokenData.userid]
     );
 
@@ -734,7 +734,7 @@ const approveApplication = async (req, res) => {
 
   try {
     const [check] = await dbConnection.execute(
-      'SELECT * FROM applications WHERE id = ? AND Organization = ?',
+      'SELECT * FROM applications WHERE event_id = ? AND Organization = ?',
       [applicationId, tokenData.name]
     );
     
@@ -766,7 +766,7 @@ const rejectApplication = async (req, res) => {
 
   try {
     const [check] = await dbConnection.execute(
-      'SELECT * FROM applications WHERE id = ? AND Organization = ?',
+      'SELECT * FROM applications WHERE event_id = ? AND Organization = ?',
       [applicationId, tokenData.name]
     );
 
